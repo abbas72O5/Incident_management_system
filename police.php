@@ -244,7 +244,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" and isset($_POST['submit'])) {
     if (mysqli_num_rows($result) > 0) {
         echo "<div class='alert error'>❌ Police ID already exists. Please use a different ID.</div>";
     } else {
-        $sql = "INSERT INTO Police (policeID, stationName, district, shiftTiming, rank, authorityID) 
+        $sql = "INSERT INTO Police (policeID, stationName, district, shiftTiming, `rank`, authorityID)
                 VALUES ('$policeid', '$station', '$district', '$shift', '$rank', '$authorityID')";
 
         if (mysqli_query($conn, $sql)) {

@@ -49,16 +49,15 @@ The PHP code references tables such as:
 1. Install PHP 8.3 using Winget.
 2. Install MariaDB using Winget.
 3. Open a new terminal after install so PATH refreshes.
-4. Start MariaDB if it is not already running.
-5. Create a database named `incident_db`.
-6. Import the original SQL schema if you have it.
-7. Run the app from this folder with:
-
-	`php -S 127.0.0.1:8000 -t "c:\Projects\MOBILE APP REACT NATIVE\website\demo proj"`
-8. Open `http://127.0.0.1:8000` in your browser.
+4. Double-click or run `setup-and-run.bat` in this project folder.
+5. The script initializes a local MySQL data directory in `mysql-data`, starts a local server on port `3307`, imports `incident_db.sql`, and launches the local PHP server.
+6. Open `http://127.0.0.1:8000` in your browser.
 
 ## Notes
 
 - `db.php` uses `localhost`, `root`, and an empty password by default, so you may need to update it if your MariaDB install uses a different username or password.
 - I updated `db.php` so sessions start automatically when the shared bootstrap is included.
 - If your MySQL username, password, or database name differs, update `db.php`.
+- The seed admin login is `admin` / `admin123`.
+- `php.ini` in this folder loads the bundled `mysqli` and `pdo_mysql` extensions from the PHP package cache.
+- The app talks to the local MySQL instance on port `3307`, not the system MySQL service.

@@ -144,9 +144,9 @@ session_start();
             
             if ($password == $user['password']) {
                 $_SESSION['user_id'] = $user['userID'];
-                $_SESSION['role'] = $user['role'];
+                $_SESSION['role'] = strtolower($user['role']);
 
-                if ($user['role'] == 'authority') {
+                if ($_SESSION['role'] == 'authority') {
                     $uid = $user['userID'];
                     $auth_sql = "SELECT * FROM Authority WHERE userID = '$uid'";
                     $auth_result = mysqli_query($conn, $auth_sql);
@@ -165,7 +165,7 @@ session_start();
                         echo "<p class='error'>❌ Authority details not found. Please complete registration.</p>";
                     }
                 } 
-                else if ($user['role'] == 'citizen') {
+                else if ($_SESSION['role'] == 'citizen') {
                     header("Location: citizen_dashboard.php");
                     exit();
                 }

@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         $rank = $_POST['rank'];
         $fid = $_POST['fid'];
 
-        $sql = "INSERT INTO firebrigade (fireBrigadeID, areaAssigned, stationName, shiftTiming, rank, authorityID) 
+        $sql = "INSERT INTO firebrigade (fireBrigadeID, areaAssigned, stationName, shiftTiming, `rank`, authorityID)
                 VALUES ('$fid', '$area', '$station', '$shift', '$rank', '$authorityID')";
 
         if (mysqli_query($conn, $sql)) {

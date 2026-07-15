@@ -10,7 +10,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" and isset($_POST["Register"]) and $_POST
     $lastname = $_POST["lastname"];
     $password = $_POST["password"];
     $cnic = $_POST["cnic"];
-    $role = $_POST["role"];
+    $role = strtolower($_POST["role"]);
 
     $check_sql = "SELECT * FROM users WHERE cnic = '$cnic'";
     $result = mysqli_query($conn, $check_sql);
@@ -28,10 +28,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" and isset($_POST["Register"]) and $_POST
             $userID = mysqli_insert_id($conn);
             $_SESSION['userID'] = $userID;
 
-            if ($role == "Authority") {
+            if ($role == "authority") {
                 header("Location: authorityreg.php");
                 exit();
-            } else if ($role == "Citizen") {
+            } else if ($role == "citizen") {
                 header("Location: citizenreg.php");
                 exit();
             }

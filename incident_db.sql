@@ -1,0 +1,149 @@
+CREATE DATABASE IF NOT EXISTS incident_db
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE incident_db;
+
+CREATE TABLE users (
+  userID INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  cnic VARCHAR(20) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  role VARCHAR(20) NOT NULL,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE admin (
+  username VARCHAR(100) PRIMARY KEY,
+  password VARCHAR(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO admin (username, password)
+VALUES ('admin', 'admin123')
+ON DUPLICATE KEY UPDATE password = VALUES(password);
+
+CREATE TABLE Authority (
+  authorityID INT AUTO_INCREMENT PRIMARY KEY,
+  province VARCHAR(100) NOT NULL,
+  city VARCHAR(100) NOT NULL,
+  department VARCHAR(50) NOT NULL,
+  contactNumber VARCHAR(25) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  email VARCHAR(255) NULL,
+  userID INT NOT NULL UNIQUE,
+  CONSTRAINT fk_authority_user
+    FOREIGN KEY (userID) REFERENCES users(userID)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE Citizen (
+  citizenID INT AUTO_INCREMENT PRIMARY KEY,
+  phone VARCHAR(25) NOT NULL,
+  gender VARCHAR(20) NOT NULL,
+  dob DATE NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  userID INT NOT NULL UNIQUE,
+  CONSTRAINT fk_citizen_user
+    FOREIGN KEY (userID) REFERENCES users(userID)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE Location (
+  locationID INT AUTO_INCREMENT PRIMARY KEY,
+  province VARCHAR(100) NOT NULL,
+  city VARCHAR(100) NOT NULL,
+  area VARCHAR(100) NOT NULL,
+  locality VARCHAR(150) NULL,
+  UNIQUE KEY uq_location_lookup (province, city, area)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE Incident (
+  incidentID INT AUTO_INCREMENT PRIMARY KEY,
+  locationID INT NOT NULL,
+  incidentType VARCHAR(100) NOT NULL,
+  date DATE NOT NULL,
+  time TIME NOT NULL,
+  description TEXT NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'unverified',
+  relevantDept VARCHAR(50) NOT NULL,
+  CONSTRAINT fk_incident_location
+    FOREIGN KEY (locationID) REFERENCES Location(locationID)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE Reports (
+  reportID INT AUTO_INCREMENT PRIMARY KEY,
+  incidentID INT NOT NULL,
+  userID INT NOT NULL,
+  reportTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  reportText TEXT NOT NULL,
+  CONSTRAINT fk_reports_incident
+    FOREIGN KEY (incidentID) REFERENCES Incident(incidentID)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_reports_user
+    FOREIGN KEY (userID) REFERENCES users(userID)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE Response (
+  responseID INT AUTO_INCREMENT PRIMARY KEY,
+  incidentID INT NOT NULL,
+  authorityID INT NOT NULL,
+  responseText TEXT NOT NULL,
+  responseTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  status VARCHAR(20) NOT NULL DEFAULT 'in progress',
+  UNIQUE KEY uq_response_once (incidentID, authorityID),
+  CONSTRAINT fk_response_incident
+    FOREIGN KEY (incidentID) REFERENCES Incident(incidentID)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_response_authority
+    FOREIGN KEY (authorityID) REFERENCES Authority(authorityID)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE Police (
+  policeID VARCHAR(50) PRIMARY KEY,
+  stationName VARCHAR(255) NOT NULL,
+  district VARCHAR(100) NOT NULL,
+  shiftTiming VARCHAR(50) NOT NULL,
+  `rank` VARCHAR(100) NOT NULL,
+  authorityID INT NOT NULL UNIQUE,
+  CONSTRAINT fk_police_authority
+    FOREIGN KEY (authorityID) REFERENCES Authority(authorityID)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE firebrigade (
+  fireBrigadeID VARCHAR(50) PRIMARY KEY,
+  areaAssigned VARCHAR(100) NOT NULL,
+  stationName VARCHAR(255) NOT NULL,
+  shiftTiming VARCHAR(50) NOT NULL,
+  `rank` VARCHAR(100) NOT NULL,
+  authorityID INT NOT NULL UNIQUE,
+  CONSTRAINT fk_firebrigade_authority
+    FOREIGN KEY (authorityID) REFERENCES Authority(authorityID)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE trafficpolice (
+  trafficPoliceID VARCHAR(50) PRIMARY KEY,
+  vehicleAssigned VARCHAR(100) NOT NULL,
+  shiftTiming VARCHAR(50) NOT NULL,
+  areaAssigned VARCHAR(100) NOT NULL,
+  authorityID INT NOT NULL UNIQUE,
+  CONSTRAINT fk_traffic_authority
+    FOREIGN KEY (authorityID) REFERENCES Authority(authorityID)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE municipal (
+  municipalID VARCHAR(50) PRIMARY KEY,
+  area VARCHAR(100) NOT NULL,
+  officeAddress VARCHAR(255) NOT NULL,
+  authorityID INT NOT NULL UNIQUE,
+  CONSTRAINT fk_municipal_authority
+    FOREIGN KEY (authorityID) REFERENCES Authority(authorityID)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
