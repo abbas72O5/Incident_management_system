@@ -1,6 +1,5 @@
 <?php
 include 'db.php';
-session_start();
 
 // Process form submission first
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
@@ -78,7 +77,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         body::before {
             content: '';
             position: absolute;
-            top: 0;
+            <?php
+            include 'db.php';
             left: 0;
             width: 100%;
             height: 100%;

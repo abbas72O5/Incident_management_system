@@ -1,5 +1,4 @@
 <?php
-session_start();
 include 'db.php';
 
 // Check if authority is logged in

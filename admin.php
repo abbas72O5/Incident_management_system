@@ -1,6 +1,5 @@
 <?php
 include 'db.php';
-session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['authorityID'], $_POST['action'])) {
     $authorityID = mysqli_real_escape_string($conn, $_POST['authorityID']);

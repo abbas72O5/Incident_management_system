@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS incident_db;
+
 CREATE DATABASE IF NOT EXISTS incident_db
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
