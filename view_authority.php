@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 if (!isset($_GET['aid'])) {
     echo "<div class='alert error'>Authority ID is missing.</div>";

@@ -1,7 +1,7 @@
 <?php
 include'db.php';
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'authority') {
-    header("Location: ../login.php");
+    header("Location: login.php");
     exit();
 }
 

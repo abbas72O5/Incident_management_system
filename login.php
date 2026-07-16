@@ -1,5 +1,52 @@
 <?php
 include 'db.php';
+
+$error = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['username'];
+    $password = $_POST['password'];
+    
+    $sql = "SELECT * FROM users WHERE name='$name'";
+    $result = $conn->query($sql);
+    
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+        
+        if ($password == $user['password']) {
+            $_SESSION['user_id'] = $user['userID'];
+            $_SESSION['role'] = strtolower($user['role']);
+
+            if ($_SESSION['role'] == 'authority') {
+                $uid = $user['userID'];
+                $auth_sql = "SELECT * FROM Authority WHERE userID = '$uid'";
+                $auth_result = mysqli_query($conn, $auth_sql);
+
+                if (mysqli_num_rows($auth_result) == 1) {
+                    $auth = mysqli_fetch_assoc($auth_result);
+                    
+                    if ($auth['status'] == 'approved') {
+                        $_SESSION['authorityID'] = $auth['authorityID'];
+                        header("Location: authority_dashboard.php");
+                        exit();
+                    } else {
+                        $error = "❌ Your registration is still pending admin approval.";
+                    }
+                } else {
+                    $error = "❌ Authority details not found. Please complete registration.";
+                }
+            } 
+            else if ($_SESSION['role'] == 'citizen') {
+                header("Location: citizen_dashboard.php");
+                exit();
+            }
+
+        } else {
+            $error = "❌ Invalid credentials.";
+        }
+    } else {
+        $error = "❌ User not found.";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -130,53 +177,7 @@ include 'db.php';
         <a href="admin_login.php">Admin Login</a>
     </div>
 
-    <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $name = $_POST['username'];
-        $password = $_POST['password'];
-        
-        $sql = "SELECT * FROM users WHERE name='$name'";
-        $result = $conn->query($sql);
-        
-        if ($result->num_rows == 1) {
-            $user = $result->fetch_assoc();
-            
-            if ($password == $user['password']) {
-                $_SESSION['user_id'] = $user['userID'];
-                $_SESSION['role'] = strtolower($user['role']);
-
-                if ($_SESSION['role'] == 'authority') {
-                    $uid = $user['userID'];
-                    $auth_sql = "SELECT * FROM Authority WHERE userID = '$uid'";
-                    $auth_result = mysqli_query($conn, $auth_sql);
-
-                    if (mysqli_num_rows($auth_result) == 1) {
-                        $auth = mysqli_fetch_assoc($auth_result);
-                        
-                        if ($auth['status'] == 'approved') {
-                            $_SESSION['authorityID'] = $auth['authorityID'];
-                            header("Location: authority_dashboard.php");
-                            exit();
-                        } else {
-                            echo "<p class='error'>❌ Your registration is still pending admin approval.</p>";
-                        }
-                    } else {
-                        echo "<p class='error'>❌ Authority details not found. Please complete registration.</p>";
-                    }
-                } 
-                else if ($_SESSION['role'] == 'citizen') {
-                    header("Location: citizen_dashboard.php");
-                    exit();
-                }
-
-            } else {
-                echo "<p class='error'>❌ Invalid credentials.</p>";
-            }
-        } else {
-            echo "<p class='error'>❌ User not found.</p>";
-        }
-    }
-    ?>
+    <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
 </div>
 
 </body>

@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 function getRiskLevel($count) {
     if ($count <= 10) return 'Low';

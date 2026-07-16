@@ -1,8 +1,6 @@
 <?php
 include 'db.php';
-?>
 
-<?php
 if($_SERVER["REQUEST_METHOD"] == "POST" and isset($_POST["Register"]) and $_POST["Register"] == "REGISTER") {
     $username = $_POST["username"];
     $firstname = $_POST["firstname"];

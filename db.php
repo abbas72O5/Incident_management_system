@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-$host = "localhost"; // Change if needed
+$host = "127.0.0.1"; // Change if needed
 $user = "root"; // Default XAMPP username
 $pass = ""; // Default XAMPP has no password
 $dbname = "incident_db";
