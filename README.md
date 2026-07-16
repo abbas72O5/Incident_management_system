@@ -1,8 +1,11 @@
-# 🚨 Incident Management System (IMS)
+# 🚨 Incident Management System (IMS) PROJECT DATE: May 2025
 
 A web-based platform designed to bridge the gap between citizens and emergency/municipal services. The system allows citizens to report local incidents (such as traffic accidents, fire breakouts, security concerns, or municipal maintenance issues) and routes them directly to the appropriate authorities (Police, Fire Brigade, Municipal, Traffic Police) for rapid action, verification, and resolution.
 
 ---
+
+<img width="1913" height="987" alt="image" src="https://github.com/user-attachments/assets/60783ff6-65d1-43e4-8b6f-350a039c26b1" />
+
 
 ## 🌟 Core Features
 
