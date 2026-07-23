@@ -1,4 +1,4 @@
-import { Shield, Twitter, Github, Linkedin } from 'lucide-react';
+import { Shield, Mail, Globe, Phone } from 'lucide-react';
 import './Footer.css';
 
 const Footer = () => {
@@ -15,9 +15,9 @@ const Footer = () => {
               Empowering communities with next-generation safety and incident management tools.
             </p>
             <div className="social-links">
-              <a href="#" className="social-link"><Twitter size={20} /></a>
-              <a href="#" className="social-link"><Github size={20} /></a>
-              <a href="#" className="social-link"><Linkedin size={20} /></a>
+              <a href="#" className="social-link"><Globe size={20} /></a>
+              <a href="#" className="social-link"><Mail size={20} /></a>
+              <a href="#" className="social-link"><Phone size={20} /></a>
             </div>
           </div>
           
